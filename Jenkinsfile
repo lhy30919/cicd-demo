@@ -1,9 +1,12 @@
 pipeline {
     agent any
 
-    stages {
+    triggers {
+        pollSCM('H/1 * * * *')
+    }
 
-        stage('Clean + Checkout') {
+    stages {
+        stage('Checkout') {
             steps {
                 deleteDir()
                 checkout scm
