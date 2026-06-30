@@ -87,7 +87,7 @@ index.html 생성
     <title>CI/CD Test</title>
 </head>
 <body>
-    <h1>Hello World</h1>
+    &lt;h1&gt;Hello&lt;/h1&gt;
 </body>
 </html>
 
@@ -122,7 +122,7 @@ GitHub → Settings → SSH Keys 등록
 
 ssh -T git@github.com  
 
-git remote add origin git@github.com:lhy30919/cicd-demo.git  
+git remote add origin oooo
 git branch -M main  
 git push -u origin main  
 
