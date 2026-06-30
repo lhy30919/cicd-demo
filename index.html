@@ -1,84 +1,305 @@
-
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="UTF-8">
-<title>서울 교통 분석</title>
-<style>
-body {
-    font-family: Arial;
-    margin: 40px;
-}
-table {
-    border-collapse: collapse;
-    width: 60%;
-}
-th, td {
-    border: 1px solid #ccc;
-    padding: 10px;
-}
-th {
-    background: #222;
-    color: white;
-}
-</style>
+    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.0/css/all.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_bbbbb87b547aff4270b421a913e1a42c {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+                .leaflet-container { font-size: 1rem; }
+            </style>
+
+            <style>html, body {
+                width: 100%;
+                height: 100%;
+                margin: 0;
+                padding: 0;
+            }
+            </style>
+
+            <style>#map {
+                position:absolute;
+                top:0;
+                bottom:0;
+                right:0;
+                left:0;
+                }
+            </style>
+
+            <script>
+                L_NO_TOUCH = false;
+                L_DISABLE_3D = false;
+            </script>
+
+        
 </head>
-
 <body>
-
-<h2>서울 날씨 기반 대중교통 분석</h2>
-
-<p>날짜: 2024-06-01</p>
-<p>기온: 19.7°C</p>
-<p>강수량: 1.7mm</p>
-
-<h3>지하철 혼잡도 분석</h3>
-
-<table>
-<tr>
-<th>역</th>
-<th>기본 이용량</th>
-<th>날씨 반영 값</th>
-</tr>
-
-
-        <tr>
-            <td>서울역</td>
-            <td>130,000</td>
-            <td>156,000</td>
-        </tr>
+    
+    
+            <div class="folium-map" id="map_bbbbb87b547aff4270b421a913e1a42c" ></div>
         
-        <tr>
-            <td>강남</td>
-            <td>120,000</td>
-            <td>144,000</td>
-        </tr>
-        
-        <tr>
-            <td>잠실</td>
-            <td>110,000</td>
-            <td>132,000</td>
-        </tr>
-        
-        <tr>
-            <td>홍대입구</td>
-            <td>95,000</td>
-            <td>114,000</td>
-        </tr>
-        
-        <tr>
-            <td>신촌</td>
-            <td>87,000</td>
-            <td>104,400</td>
-        </tr>
-        
-        <tr>
-            <td>건대입구</td>
-            <td>78,000</td>
-            <td>93,600</td>
-        </tr>
-        
-</table>
-
 </body>
+<script>
+    
+    
+            var map_bbbbb87b547aff4270b421a913e1a42c = L.map(
+                "map_bbbbb87b547aff4270b421a913e1a42c",
+                {
+                    center: [36.3, 127.8],
+                    crs: L.CRS.EPSG3857,
+                    ...{
+  "zoom": 7,
+  "zoomControl": true,
+  "preferCanvas": false,
+}
+
+                }
+            );
+
+            
+
+        
+    
+            var tile_layer_3dc6bd8a253ea95592954d85fef093db = L.tileLayer(
+                "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+                {
+  "minZoom": 0,
+  "maxZoom": 19,
+  "maxNativeZoom": 19,
+  "noWrap": false,
+  "attribution": "\u0026copy; \u003ca href=\"https://www.openstreetmap.org/copyright\"\u003eOpenStreetMap\u003c/a\u003e contributors",
+  "subdomains": "abc",
+  "detectRetina": false,
+  "tms": false,
+  "opacity": 1,
+}
+
+            );
+        
+    
+            tile_layer_3dc6bd8a253ea95592954d85fef093db.addTo(map_bbbbb87b547aff4270b421a913e1a42c);
+        
+    
+            var marker_5fb601a25b3b5dd2bc82f3211f33e207 = L.marker(
+                [36.3809, 128.3681],
+                {
+}
+            ).addTo(map_bbbbb87b547aff4270b421a913e1a42c);
+        
+    
+        var popup_c40d88cada5691892562ecc5e4b1cb49 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_51e06ee16970869573a686844db02cdf = $(`<div id="html_51e06ee16970869573a686844db02cdf" style="width: 100.0%; height: 100.0%;">         <b>부산</b><br>         점수: 20.84<br>         평균기온: 14.9°C<br>         강수량: 1136.1mm<br>         변동폭: 40.1°C         </div>`)[0];
+                popup_c40d88cada5691892562ecc5e4b1cb49.setContent(html_51e06ee16970869573a686844db02cdf);
+            
+        
+
+        marker_5fb601a25b3b5dd2bc82f3211f33e207.bindPopup(popup_c40d88cada5691892562ecc5e4b1cb49)
+        ;
+
+        
+    
+    
+            marker_5fb601a25b3b5dd2bc82f3211f33e207.bindTooltip(
+                `<div>
+                     부산
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var marker_9bb3c239844b6abaaacb0aec63587a7c = L.marker(
+                [38.72445, 127.64274],
+                {
+}
+            ).addTo(map_bbbbb87b547aff4270b421a913e1a42c);
+        
+    
+        var popup_abf2c3a7841dcdb60b71b99845708201 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_b1fed3bc0f05f1640b052e6557c0b45a = $(`<div id="html_b1fed3bc0f05f1640b052e6557c0b45a" style="width: 100.0%; height: 100.0%;">         <b>대구</b><br>         점수: -1.11<br>         평균기온: 9.9°C<br>         강수량: 1191.3mm<br>         변동폭: 47.2°C         </div>`)[0];
+                popup_abf2c3a7841dcdb60b71b99845708201.setContent(html_b1fed3bc0f05f1640b052e6557c0b45a);
+            
+        
+
+        marker_9bb3c239844b6abaaacb0aec63587a7c.bindPopup(popup_abf2c3a7841dcdb60b71b99845708201)
+        ;
+
+        
+    
+    
+            marker_9bb3c239844b6abaaacb0aec63587a7c.bindTooltip(
+                `<div>
+                     대구
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var marker_d08f4c31f04d453046e439b5ce27004c = L.marker(
+                [35.07317, 126.7],
+                {
+}
+            ).addTo(map_bbbbb87b547aff4270b421a913e1a42c);
+        
+    
+        var popup_ed65bcc615f2e5e53677f07c8845fdf9 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_12ff5b56c7e7fc5922f440a470a1f6ac = $(`<div id="html_12ff5b56c7e7fc5922f440a470a1f6ac" style="width: 100.0%; height: 100.0%;">         <b>인천</b><br>         점수: 12.56<br>         평균기온: 14.8°C<br>         강수량: 1466.1mm<br>         변동폭: 33.7°C         </div>`)[0];
+                popup_ed65bcc615f2e5e53677f07c8845fdf9.setContent(html_12ff5b56c7e7fc5922f440a470a1f6ac);
+            
+        
+
+        marker_d08f4c31f04d453046e439b5ce27004c.bindPopup(popup_ed65bcc615f2e5e53677f07c8845fdf9)
+        ;
+
+        
+    
+    
+            marker_d08f4c31f04d453046e439b5ce27004c.bindTooltip(
+                `<div>
+                     인천
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var marker_a519a2f61e6677512fc188d9c2756bb3 = L.marker(
+                [36.9122, 127.1279],
+                {
+}
+            ).addTo(map_bbbbb87b547aff4270b421a913e1a42c);
+        
+    
+        var popup_636e5cc0b17cce7dd1ca2a0b86d9edd6 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_e109ec7250783d2fffda0d94f8a06ea3 = $(`<div id="html_e109ec7250783d2fffda0d94f8a06ea3" style="width: 100.0%; height: 100.0%;">         <b>광주</b><br>         점수: 7.05<br>         평균기온: 13.6°C<br>         강수량: 1367.1mm<br>         변동폭: 39.9°C         </div>`)[0];
+                popup_636e5cc0b17cce7dd1ca2a0b86d9edd6.setContent(html_e109ec7250783d2fffda0d94f8a06ea3);
+            
+        
+
+        marker_a519a2f61e6677512fc188d9c2756bb3.bindPopup(popup_636e5cc0b17cce7dd1ca2a0b86d9edd6)
+        ;
+
+        
+    
+    
+            marker_a519a2f61e6677512fc188d9c2756bb3.bindTooltip(
+                `<div>
+                     광주
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var marker_68898e4b0c122b489bfd5bdaee9f8610 = L.marker(
+                [35.68818, 128.67632],
+                {
+}
+            ).addTo(map_bbbbb87b547aff4270b421a913e1a42c);
+        
+    
+        var popup_364870e90a53bd2e32821a30ca95abff = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_04fa4477825e20ca71e27070c54fdda7 = $(`<div id="html_04fa4477825e20ca71e27070c54fdda7" style="width: 100.0%; height: 100.0%;">         <b>울산</b><br>         점수: 15.0<br>         평균기온: 14.7°C<br>         강수량: 1306.4mm<br>         변동폭: 37.7°C         </div>`)[0];
+                popup_364870e90a53bd2e32821a30ca95abff.setContent(html_04fa4477825e20ca71e27070c54fdda7);
+            
+        
+
+        marker_68898e4b0c122b489bfd5bdaee9f8610.bindPopup(popup_364870e90a53bd2e32821a30ca95abff)
+        ;
+
+        
+    
+    
+            marker_68898e4b0c122b489bfd5bdaee9f8610.bindTooltip(
+                `<div>
+                     울산
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var marker_b0c353066dac899598aefe690158033c = L.marker(
+                [34.70931, 127.26647],
+                {
+}
+            ).addTo(map_bbbbb87b547aff4270b421a913e1a42c);
+        
+    
+        var popup_d44349581216a53edcf3e2928ccc5396 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_e1903129d441e7e06c93df44545ce48e = $(`<div id="html_e1903129d441e7e06c93df44545ce48e" style="width: 100.0%; height: 100.0%;">         <b>대전</b><br>         점수: -3.99<br>         평균기온: 15.1°C<br>         강수량: 1788.4mm<br>         변동폭: 34.4°C         </div>`)[0];
+                popup_d44349581216a53edcf3e2928ccc5396.setContent(html_e1903129d441e7e06c93df44545ce48e);
+            
+        
+
+        marker_b0c353066dac899598aefe690158033c.bindPopup(popup_d44349581216a53edcf3e2928ccc5396)
+        ;
+
+        
+    
+    
+            marker_b0c353066dac899598aefe690158033c.bindTooltip(
+                `<div>
+                     대전
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+</script>
 </html>

@@ -91,7 +91,7 @@ def build_map(cities):
             tooltip=city
         ).add_to(m)
 
-    m.save("korea_map.html")
+    m.save("index.html")
     print("완료: korea_map.html 생성")
 
 
