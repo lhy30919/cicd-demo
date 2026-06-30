@@ -1,162 +1,114 @@
 import requests
-import pandas as pd
-from datetime import datetime
+import folium
 
-# =========================
-# 1. 분석 날짜
-# =========================
-TARGET_DATE = "2024-06-01"
+START_DATE = "2024-01-01"
+END_DATE = "2024-12-31"
 
 
 # =========================
-# 2. 날씨 (API KEY 없음)
+# 1. 도시 → 좌표 (실데이터)
 # =========================
-def get_weather(date):
+def get_city_coord(city):
+    url = f"https://geocoding-api.open-meteo.com/v1/search?name={city}&count=1&language=ko"
+
+    res = requests.get(url).json()
+
+    if "results" not in res:
+        return None
+
+    r = res["results"][0]
+    return r["latitude"], r["longitude"]
+
+
+# =========================
+# 2. 날씨 데이터 (실데이터)
+# =========================
+def fetch_weather(lat, lon):
     url = (
         "https://archive-api.open-meteo.com/v1/archive"
-        f"?latitude=37.5665&longitude=126.9780"
-        f"&start_date={date}&end_date={date}"
-        "&daily=temperature_2m_mean,precipitation_sum,weather_code"
+        f"?latitude={lat}&longitude={lon}"
+        f"&start_date={START_DATE}&end_date={END_DATE}"
+        "&daily=temperature_2m_mean,precipitation_sum"
         "&timezone=Asia%2FSeoul"
     )
 
-    res = requests.get(url)
-    data = res.json()["daily"]
+    data = requests.get(url).json()["daily"]
 
-    return {
-        "date": date,
-        "temp": data["temperature_2m_mean"][0],
-        "rain": data["precipitation_sum"][0],
-        "code": data["weather_code"][0]
-    }
+    temps = data["temperature_2m_mean"]
+    rains = data["precipitation_sum"]
 
+    temps = [t for t in temps if t is not None]
+    rains = [r for r in rains if r is not None]
 
-# =========================
-# 3. 지하철 데이터 (키 없음 - 고정 샘플)
-# =========================
-def get_subway(date):
-    # 실제 API 대신 "현실적인 샘플 데이터"
-    # 포트폴리오용 핵심: 구조 설명
+    avg_temp = sum(temps) / len(temps)
+    total_rain = sum(rains)
+    temp_range = max(temps) - min(temps)
 
-    data = [
-        {"station": "강남", "ride": 120000},
-        {"station": "홍대입구", "ride": 95000},
-        {"station": "잠실", "ride": 110000},
-        {"station": "서울역", "ride": 130000},
-        {"station": "신촌", "ride": 87000},
-        {"station": "건대입구", "ride": 78000},
-    ]
-
-    return pd.DataFrame(data)
+    return avg_temp, total_rain, temp_range
 
 
 # =========================
-# 4. 날씨 영향 점수
+# 3. 점수 계산 (파생값)
 # =========================
-def weather_score(weather):
-    score = 0
-
-    if weather["code"] == 0:
-        score -= 1  # 맑음 → 분산
-    if weather["rain"] > 0:
-        score += 2  # 비 → 지하철 증가
-    if weather["temp"] > 30:
-        score += 1  # 폭염 → 실내 이동
-
-    return score
+def score(avg_temp, rain, temp_range):
+    return round(
+        100
+        - temp_range * 1.3
+        - rain * 0.05
+        + (22 - abs(avg_temp - 22)) * 2,
+        2
+    )
 
 
 # =========================
-# 5. 분석
+# 4. 지도 생성
 # =========================
-def analyze(subway_df, score):
-    subway_df = subway_df.copy()
-    subway_df["final_score"] = subway_df["ride"] * (1 + score * 0.1)
+def build_map(cities):
 
-    return subway_df.sort_values("final_score", ascending=False)
+    m = folium.Map(location=[36.3, 127.8], zoom_start=7)
 
+    for city in cities:
+        coord = get_city_coord(city)
+        if not coord:
+            continue
 
-# =========================
-# 6. HTML 생성
-# =========================
-def make_html(weather, df):
+        lat, lon = coord
 
-    rows = ""
-    for _, r in df.iterrows():
-        rows += f"""
-        <tr>
-            <td>{r['station']}</td>
-            <td>{r['ride']:,}</td>
-            <td>{int(r['final_score']):,}</td>
-        </tr>
+        avg_temp, rain, temp_range = fetch_weather(lat, lon)
+        s = score(avg_temp, rain, temp_range)
+
+        popup_text = f"""
+        <b>{city}</b><br>
+        점수: {s}<br>
+        평균기온: {round(avg_temp,1)}°C<br>
+        강수량: {round(rain,1)}mm<br>
+        변동폭: {round(temp_range,1)}°C
         """
 
-    html = f"""
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>서울 교통 분석</title>
-<style>
-body {{
-    font-family: Arial;
-    margin: 40px;
-}}
-table {{
-    border-collapse: collapse;
-    width: 60%;
-}}
-th, td {{
-    border: 1px solid #ccc;
-    padding: 10px;
-}}
-th {{
-    background: #222;
-    color: white;
-}}
-</style>
-</head>
+        folium.Marker(
+            location=[lat, lon],
+            popup=folium.Popup(popup_text, max_width=300),
+            tooltip=city
+        ).add_to(m)
 
-<body>
-
-<h2>서울 날씨 기반 대중교통 분석</h2>
-
-<p>날짜: {weather['date']}</p>
-<p>기온: {weather['temp']}°C</p>
-<p>강수량: {weather['rain']}mm</p>
-
-<h3>지하철 혼잡도 분석</h3>
-
-<table>
-<tr>
-<th>역</th>
-<th>기본 이용량</th>
-<th>날씨 반영 값</th>
-</tr>
-
-{rows}
-</table>
-
-</body>
-</html>
-"""
-
-    with open("index.html", "w", encoding="utf-8") as f:
-        f.write(html)
-
-    print("완료: index.html 생성됨")
+    m.save("korea_map.html")
+    print("완료: korea_map.html 생성")
 
 
 # =========================
-# 7. 실행
+# 5. 실행
 # =========================
 if __name__ == "__main__":
 
-    weather = get_weather(TARGET_DATE)
-    score = weather_score(weather)
+    city_list = [
+        "서울",
+        "부산",
+        "제주",
+        "대구",
+        "인천",
+        "광주",
+        "울산",
+        "대전"
+    ]
 
-    subway = get_subway(TARGET_DATE)
-
-    result = analyze(subway, score)
-
-    make_html(weather, result)
+    build_map(city_list)
