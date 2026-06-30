@@ -1,35 +1,23 @@
 import requests
-import folium
-from datetime import datetime
 
 # =========================
-# 1. 입력 도시 (이름만)
+# 1. 도시 (실데이터 기반)
 # =========================
-CITIES = ["서울", "부산", "대구", "제주", "인천", "광주", "울산"]
-
-
-# =========================
-# 2. 도시 → 좌표 (정확 KR 필터)
-# =========================
-def get_city_coord(city):
-    url = f"https://geocoding-api.open-meteo.com/v1/search?name={city}&count=10&language=ko"
-
-    res = requests.get(url).json()
-
-    if "results" not in res:
-        return None
-
-    for r in res["results"]:
-        if r.get("country_code") == "KR":
-            return r["latitude"], r["longitude"]
-
-    return None
+CITIES = {
+    "서울": (37.5665, 126.9780),
+    "부산": (35.1796, 129.0756),
+    "대구": (35.8722, 128.6025),
+    "제주": (33.4996, 126.5312),
+    "인천": (37.4563, 126.7052),
+    "광주": (35.1595, 126.8526),
+    "울산": (35.5384, 129.3114),
+}
 
 
 # =========================
-# 3. 연도별 날씨 데이터 수집
+# 2. 실제 기후 데이터
 # =========================
-def fetch_year_weather(lat, lon, year):
+def fetch_weather(lat, lon, year):
     url = (
         "https://archive-api.open-meteo.com/v1/archive"
         f"?latitude={lat}&longitude={lon}"
@@ -51,83 +39,181 @@ def fetch_year_weather(lat, lon, year):
 
 
 # =========================
-# 4. 변화량 계산 (핵심)
+# 3. 변화량 계산
 # =========================
-def compute_change(data_2023, data_2024):
-
+def compute_change(old, new):
     return {
-        "temp_change": data_2024["avg_temp"] - data_2023["avg_temp"],
-        "rain_change": data_2024["total_rain"] - data_2023["total_rain"],
-        "range_change": data_2024["temp_range"] - data_2023["temp_range"],
+        "temp_change": new["avg_temp"] - old["avg_temp"],
+        "rain_change": new["total_rain"] - old["total_rain"],
+        "range_change": new["temp_range"] - old["temp_range"],
     }
 
 
 # =========================
-# 5. 지도 생성
+# 4. HTML 보고서 생성
 # =========================
-def build_map(results):
+def make_report(results):
 
-    m = folium.Map(location=[36.2, 127.8], zoom_start=7)
+    rows = ""
 
     for r in results:
+        c = r["city"]
+        ch = r["change"]
 
-        city = r["city"]
-        lat, lon = r["coord"]
+        # 강조 색상
+        if ch["temp_change"] > 1:
+            badge = "🔴 급격한 온난화"
+        elif ch["temp_change"] > 0:
+            badge = "🟠 온난화 진행"
+        else:
+            badge = "🔵 안정"
 
-        popup = f"""
-        <b>{city}</b><br>
-        🌡 온도 변화: {round(r['change']['temp_change'],2)}°C<br>
-        🌧 강수 변화: {round(r['change']['rain_change'],2)}mm<br>
-        📊 기후 변동성: {round(r['change']['range_change'],2)}<br>
+        rows += f"""
+        <tr>
+            <td>{c}</td>
+            <td>{round(ch['temp_change'],2)}°C</td>
+            <td>{round(ch['rain_change'],2)} mm</td>
+            <td>{round(ch['range_change'],2)}</td>
+            <td>{badge}</td>
+        </tr>
         """
 
-        # 색상 기준 (변화량)
-        if r["change"]["temp_change"] > 1:
-            color = "red"
-        elif r["change"]["temp_change"] > 0:
-            color = "orange"
-        else:
-            color = "blue"
+    html = f"""
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Korea Climate Change Report</title>
 
-        folium.CircleMarker(
-            location=[lat, lon],
-            radius=10,
-            color=color,
-            fill=True,
-            fill_opacity=0.7,
-            popup=folium.Popup(popup, max_width=300),
-            tooltip=city
-        ).add_to(m)
+<style>
+body {{
+    font-family: Arial;
+    margin: 0;
+    background: #f4f6f9;
+}}
 
-    m.save("index.html")
+.header {{
+    background: #111827;
+    color: white;
+    padding: 30px;
+}}
+
+.container {{
+    padding: 30px;
+}}
+
+.card {{
+    background: white;
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+}}
+
+table {{
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+}}
+
+th {{
+    background: #1f2937;
+    color: white;
+    padding: 12px;
+}}
+
+td {{
+    padding: 12px;
+    border-bottom: 1px solid #eee;
+    text-align: center;
+}}
+
+tr:hover {{
+    background: #f9fafb;
+}}
+
+.badge {{
+    padding: 4px 8px;
+    border-radius: 8px;
+    font-size: 12px;
+}}
+</style>
+</head>
+
+<body>
+
+<div class="header">
+<h1>🇰🇷 한국 도시 기후 변화 분석 보고서</h1>
+<p>2023 vs 2024 실제 기상 데이터 기반 분석</p>
+</div>
+
+<div class="container">
+
+<div class="card">
+<h2>📊 분석 개요</h2>
+<p>
+본 보고서는 Open-Meteo 실제 기상 데이터를 기반으로<br>
+한국 주요 도시의 기후 변화량을 비교 분석한 결과이다.
+</p>
+</div>
+
+<div class="card">
+<h2>🌡 주요 분석 기준</h2>
+<ul>
+<li>평균 기온 변화</li>
+<li>연간 강수량 변화</li>
+<li>기온 변동성 변화</li>
+</ul>
+</div>
+
+<div class="card">
+<h2>📈 도시별 기후 변화 결과</h2>
+
+<table>
+<tr>
+<th>도시</th>
+<th>기온 변화</th>
+<th>강수 변화</th>
+<th>변동성 변화</th>
+<th>상태</th>
+</tr>
+
+{rows}
+</table>
+
+</div>
+
+</div>
+
+</body>
+</html>
+"""
+
+    with open("index.html", "w", encoding="utf-8") as f:
+        f.write(html)
+
+    print("완료: index.html 보고서 생성")
 
 
 # =========================
-# 6. 실행
+# 5. 실행
 # =========================
 if __name__ == "__main__":
 
     results = []
 
-    for city in CITIES:
+    for city, (lat, lon) in CITIES.items():
 
-        coord = get_city_coord(city)
+        old = fetch_weather(lat, lon, 2023)
+        new = fetch_weather(lat, lon, 2024)
 
-        if not coord:
-            continue
-
-        lat, lon = coord
-
-        # 2023 / 2024 실제 데이터
-        data_2023 = fetch_year_weather(lat, lon, 2023)
-        data_2024 = fetch_year_weather(lat, lon, 2024)
-
-        change = compute_change(data_2023, data_2024)
+        change = compute_change(old, new)
 
         results.append({
             "city": city,
-            "coord": coord,
             "change": change
         })
 
-    build_map(results)
+    make_report(results)

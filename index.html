@@ -1,266 +1,167 @@
+
 <!DOCTYPE html>
 <html>
 <head>
-    
-    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
-    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.js"></script>
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.css"/>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"/>
-    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css"/>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.0/css/all.min.css"/>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
-    
-            <meta name="viewport" content="width=device-width,
-                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-            <style>
-                #map_86307065599e4feb14e760c4714fd8ac {
-                    position: relative;
-                    width: 100.0%;
-                    height: 100.0%;
-                    left: 0.0%;
-                    top: 0.0%;
-                }
-                .leaflet-container { font-size: 1rem; }
-            </style>
+<meta charset="UTF-8">
+<title>Korea Climate Change Report</title>
 
-            <style>html, body {
-                width: 100%;
-                height: 100%;
-                margin: 0;
-                padding: 0;
-            }
-            </style>
+<style>
+body {
+    font-family: Arial;
+    margin: 0;
+    background: #f4f6f9;
+}
 
-            <style>#map {
-                position:absolute;
-                top:0;
-                bottom:0;
-                right:0;
-                left:0;
-                }
-            </style>
+.header {
+    background: #111827;
+    color: white;
+    padding: 30px;
+}
 
-            <script>
-                L_NO_TOUCH = false;
-                L_DISABLE_3D = false;
-            </script>
+.container {
+    padding: 30px;
+}
 
-        
+.card {
+    background: white;
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+th {
+    background: #1f2937;
+    color: white;
+    padding: 12px;
+}
+
+td {
+    padding: 12px;
+    border-bottom: 1px solid #eee;
+    text-align: center;
+}
+
+tr:hover {
+    background: #f9fafb;
+}
+
+.badge {
+    padding: 4px 8px;
+    border-radius: 8px;
+    font-size: 12px;
+}
+</style>
 </head>
+
 <body>
-    
-    
-            <div class="folium-map" id="map_86307065599e4feb14e760c4714fd8ac" ></div>
+
+<div class="header">
+<h1>🇰🇷 한국 도시 기후 변화 분석 보고서</h1>
+<p>2023 vs 2024 실제 기상 데이터 기반 분석</p>
+</div>
+
+<div class="container">
+
+<div class="card">
+<h2>📊 분석 개요</h2>
+<p>
+본 보고서는 Open-Meteo 실제 기상 데이터를 기반으로<br>
+한국 주요 도시의 기후 변화량을 비교 분석한 결과이다.
+</p>
+</div>
+
+<div class="card">
+<h2>🌡 주요 분석 기준</h2>
+<ul>
+<li>평균 기온 변화</li>
+<li>연간 강수량 변화</li>
+<li>기온 변동성 변화</li>
+</ul>
+</div>
+
+<div class="card">
+<h2>📈 도시별 기후 변화 결과</h2>
+
+<table>
+<tr>
+<th>도시</th>
+<th>기온 변화</th>
+<th>강수 변화</th>
+<th>변동성 변화</th>
+<th>상태</th>
+</tr>
+
+
+        <tr>
+            <td>서울</td>
+            <td>0.71°C</td>
+            <td>-188.2 mm</td>
+            <td>-1.8</td>
+            <td>🟠 온난화 진행</td>
+        </tr>
         
+        <tr>
+            <td>부산</td>
+            <td>0.51°C</td>
+            <td>-178.7 mm</td>
+            <td>-2.0</td>
+            <td>🟠 온난화 진행</td>
+        </tr>
+        
+        <tr>
+            <td>대구</td>
+            <td>0.7°C</td>
+            <td>-338.8 mm</td>
+            <td>-2.1</td>
+            <td>🟠 온난화 진행</td>
+        </tr>
+        
+        <tr>
+            <td>제주</td>
+            <td>0.97°C</td>
+            <td>329.8 mm</td>
+            <td>-1.5</td>
+            <td>🟠 온난화 진행</td>
+        </tr>
+        
+        <tr>
+            <td>인천</td>
+            <td>0.77°C</td>
+            <td>-366.7 mm</td>
+            <td>-2.1</td>
+            <td>🟠 온난화 진행</td>
+        </tr>
+        
+        <tr>
+            <td>광주</td>
+            <td>0.56°C</td>
+            <td>-236.5 mm</td>
+            <td>-3.6</td>
+            <td>🟠 온난화 진행</td>
+        </tr>
+        
+        <tr>
+            <td>울산</td>
+            <td>0.39°C</td>
+            <td>-34.5 mm</td>
+            <td>0.2</td>
+            <td>🟠 온난화 진행</td>
+        </tr>
+        
+</table>
+
+</div>
+
+</div>
+
 </body>
-<script>
-    
-    
-            var map_86307065599e4feb14e760c4714fd8ac = L.map(
-                "map_86307065599e4feb14e760c4714fd8ac",
-                {
-                    center: [36.2, 127.8],
-                    crs: L.CRS.EPSG3857,
-                    ...{
-  "zoom": 7,
-  "zoomControl": true,
-  "preferCanvas": false,
-}
-
-                }
-            );
-
-            
-
-        
-    
-            var tile_layer_9e5ee667d2feae1a5f434bbf965e99d8 = L.tileLayer(
-                "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
-                {
-  "minZoom": 0,
-  "maxZoom": 19,
-  "maxNativeZoom": 19,
-  "noWrap": false,
-  "attribution": "\u0026copy; \u003ca href=\"https://www.openstreetmap.org/copyright\"\u003eOpenStreetMap\u003c/a\u003e contributors",
-  "subdomains": "abc",
-  "detectRetina": false,
-  "tms": false,
-  "opacity": 1,
-}
-
-            );
-        
-    
-            tile_layer_9e5ee667d2feae1a5f434bbf965e99d8.addTo(map_86307065599e4feb14e760c4714fd8ac);
-        
-    
-            var circle_marker_0a076e63bcbcc1ceab4a9a96e9ac7012 = L.circleMarker(
-                [36.3809, 128.3681],
-                {"bubblingMouseEvents": true, "color": "orange", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "orange", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 10, "stroke": true, "weight": 3}
-            ).addTo(map_86307065599e4feb14e760c4714fd8ac);
-        
-    
-        var popup_8a8f26f486b7b2b2c5b0f034171417c3 = L.popup({
-  "maxWidth": 300,
-});
-
-        
-            
-                var html_defa6b7866a780f1dc093f57f58e49ab = $(`<div id="html_defa6b7866a780f1dc093f57f58e49ab" style="width: 100.0%; height: 100.0%;">         <b>부산</b><br>         🌡 온도 변화: 0.68°C<br>         🌧 강수 변화: -524.6mm<br>         📊 기후 변동성: -1.1<br>         </div>`)[0];
-                popup_8a8f26f486b7b2b2c5b0f034171417c3.setContent(html_defa6b7866a780f1dc093f57f58e49ab);
-            
-        
-
-        circle_marker_0a076e63bcbcc1ceab4a9a96e9ac7012.bindPopup(popup_8a8f26f486b7b2b2c5b0f034171417c3)
-        ;
-
-        
-    
-    
-            circle_marker_0a076e63bcbcc1ceab4a9a96e9ac7012.bindTooltip(
-                `<div>
-                     부산
-                 </div>`,
-                {
-  "sticky": true,
-}
-            );
-        
-    
-            var circle_marker_222909772f41eef0b5cb9db1d6edc6b5 = L.circleMarker(
-                [34.32341, 126.69866],
-                {"bubblingMouseEvents": true, "color": "orange", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "orange", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 10, "stroke": true, "weight": 3}
-            ).addTo(map_86307065599e4feb14e760c4714fd8ac);
-        
-    
-        var popup_65d68607c527359de5ec5df732406da0 = L.popup({
-  "maxWidth": 300,
-});
-
-        
-            
-                var html_c8895ceea0746014ca9311770afa10c9 = $(`<div id="html_c8895ceea0746014ca9311770afa10c9" style="width: 100.0%; height: 100.0%;">         <b>대구</b><br>         🌡 온도 변화: 0.98°C<br>         🌧 강수 변화: -134.2mm<br>         📊 기후 변동성: -1.7<br>         </div>`)[0];
-                popup_65d68607c527359de5ec5df732406da0.setContent(html_c8895ceea0746014ca9311770afa10c9);
-            
-        
-
-        circle_marker_222909772f41eef0b5cb9db1d6edc6b5.bindPopup(popup_65d68607c527359de5ec5df732406da0)
-        ;
-
-        
-    
-    
-            circle_marker_222909772f41eef0b5cb9db1d6edc6b5.bindTooltip(
-                `<div>
-                     대구
-                 </div>`,
-                {
-  "sticky": true,
-}
-            );
-        
-    
-            var circle_marker_d2808f978acc466d653e0c3e2a434a15 = L.circleMarker(
-                [35.07317, 126.7],
-                {"bubblingMouseEvents": true, "color": "orange", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "orange", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 10, "stroke": true, "weight": 3}
-            ).addTo(map_86307065599e4feb14e760c4714fd8ac);
-        
-    
-        var popup_bf88fca189d28ec31e53b80a6a3c4bc0 = L.popup({
-  "maxWidth": 300,
-});
-
-        
-            
-                var html_2e3a277fd52350ba4ffe88ddd33e19b3 = $(`<div id="html_2e3a277fd52350ba4ffe88ddd33e19b3" style="width: 100.0%; height: 100.0%;">         <b>인천</b><br>         🌡 온도 변화: 0.6°C<br>         🌧 강수 변화: -258.6mm<br>         📊 기후 변동성: -3.7<br>         </div>`)[0];
-                popup_bf88fca189d28ec31e53b80a6a3c4bc0.setContent(html_2e3a277fd52350ba4ffe88ddd33e19b3);
-            
-        
-
-        circle_marker_d2808f978acc466d653e0c3e2a434a15.bindPopup(popup_bf88fca189d28ec31e53b80a6a3c4bc0)
-        ;
-
-        
-    
-    
-            circle_marker_d2808f978acc466d653e0c3e2a434a15.bindTooltip(
-                `<div>
-                     인천
-                 </div>`,
-                {
-  "sticky": true,
-}
-            );
-        
-    
-            var circle_marker_096cf84a6be997d14b2238029313acb5 = L.circleMarker(
-                [36.9122, 127.1279],
-                {"bubblingMouseEvents": true, "color": "orange", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "orange", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 10, "stroke": true, "weight": 3}
-            ).addTo(map_86307065599e4feb14e760c4714fd8ac);
-        
-    
-        var popup_619e66c0ed4ccc0a9ee42cb2c456f855 = L.popup({
-  "maxWidth": 300,
-});
-
-        
-            
-                var html_0cca45309db580321440daad3c79e38e = $(`<div id="html_0cca45309db580321440daad3c79e38e" style="width: 100.0%; height: 100.0%;">         <b>광주</b><br>         🌡 온도 변화: 0.47°C<br>         🌧 강수 변화: -134.8mm<br>         📊 기후 변동성: -1.1<br>         </div>`)[0];
-                popup_619e66c0ed4ccc0a9ee42cb2c456f855.setContent(html_0cca45309db580321440daad3c79e38e);
-            
-        
-
-        circle_marker_096cf84a6be997d14b2238029313acb5.bindPopup(popup_619e66c0ed4ccc0a9ee42cb2c456f855)
-        ;
-
-        
-    
-    
-            circle_marker_096cf84a6be997d14b2238029313acb5.bindTooltip(
-                `<div>
-                     광주
-                 </div>`,
-                {
-  "sticky": true,
-}
-            );
-        
-    
-            var circle_marker_566ece444bbedc8ac37f7102a1c0d943 = L.circleMarker(
-                [35.68818, 128.67632],
-                {"bubblingMouseEvents": true, "color": "orange", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "orange", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 10, "stroke": true, "weight": 3}
-            ).addTo(map_86307065599e4feb14e760c4714fd8ac);
-        
-    
-        var popup_3bd92d35eb4aad0d19939e413e98b88f = L.popup({
-  "maxWidth": 300,
-});
-
-        
-            
-                var html_81706f72fd0e093a5f94ffaef4dacb90 = $(`<div id="html_81706f72fd0e093a5f94ffaef4dacb90" style="width: 100.0%; height: 100.0%;">         <b>울산</b><br>         🌡 온도 변화: 0.63°C<br>         🌧 강수 변화: -450.3mm<br>         📊 기후 변동성: -2.2<br>         </div>`)[0];
-                popup_3bd92d35eb4aad0d19939e413e98b88f.setContent(html_81706f72fd0e093a5f94ffaef4dacb90);
-            
-        
-
-        circle_marker_566ece444bbedc8ac37f7102a1c0d943.bindPopup(popup_3bd92d35eb4aad0d19939e413e98b88f)
-        ;
-
-        
-    
-    
-            circle_marker_566ece444bbedc8ac37f7102a1c0d943.bindTooltip(
-                `<div>
-                     울산
-                 </div>`,
-                {
-  "sticky": true,
-}
-            );
-        
-</script>
 </html>
